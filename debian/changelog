@@ -1,3 +1,11 @@
+ganglios (1.3) precise-wikimedia; urgency=low
+
+  * get_metric_for_host now returns ganglia metric type
+  * check_ganglios_generic_value now works with types other than float
+  * ganglios_parser now works with non-standard gmond ports
+
+ -- Andrew Otto (WMF) <otto@wikimedia.org>  Wed, 15 Jan 2014 17:10:09 +0000
+
 ganglios (1.2) stable; urgency=low
 
   * changed ganglia_parser to use gmetad.conf instead of nannybot#

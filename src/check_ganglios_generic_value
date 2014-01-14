@@ -57,15 +57,27 @@ so passing 'gt 10' means CRIT if the host's value greater than 10
     metric = options.metric
     getmetric = options.getmetric
 
-    cur_val_raw = ganglios.get_metric_for_host(host_name, metric)
+    cur_val_raw, cur_val_type = ganglios.get_metric_for_host(host_name, metric, True)
+
+    # infer the python type we should cast cur_val_raw to based on the
+    # ganglia metric type
+    if (cur_val_type in ['float', 'double']):
+        python_type = float
+    elif ('int' in cur_val_type):      # int32, uint16, uint32, etc.
+        python_type = int
+    else:
+        python_type = str
+
     try:
-        cur_val = float(cur_val_raw)
+        # cast cur val to what it should be in python
+        cur_val = python_type(cur_val_raw)
+
     except TypeError, e:
         # ganglios didn't return a number - probably None
         if (cur_val_raw is None):
             output = "UNKNOWN - check failed, metric not found"
         else:
-            output = "UNKNOWN - check failed (returned '%s' when casting '%s')" % (e, cur_val_raw)
+            output = "UNKNOWN - check failed (returned '%s' when casting '%s'.  metric type is %s, attempted to cast to %s)" % (e, cur_val_raw, cur_val_type, python_type)
         status = 3
         sys.stdout.write(output)
         ganglios.done(status)
@@ -79,8 +91,9 @@ so passing 'gt 10' means CRIT if the host's value greater than 10
 
     # if called with -g, these metrics are optional.  Move them here so you don't trigger an exception on casting an empty option
     op = options.op
-    warn_value = float(options.warning)
-    crit_value = float(options.critical)
+    # cast comparison values to python types for operator comparison
+    warn_value = python_type(options.warning)
+    crit_value = python_type(options.critical)
 
     if getattr(operator, op)(cur_val, crit_value):
         status = 2

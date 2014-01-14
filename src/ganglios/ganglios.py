@@ -102,11 +102,16 @@ def parse_ganglia (metrics, thunk):
             sys.stdout.write (bad_host + ' ')
     return status
 
-def get_metric_for_host(hostname, metricname):
+def get_metric_for_host(hostname, metricname, return_type=False):
     """
     using the new-style (one file per host), this 
-    takes a hostname, looks up the metric, and returns its value
-    This is method (b) above
+    takes a hostname, looks up the metric, and returns its value and type
+    This is method (b) above.
+
+    If you would like to have the ganglia metric TYPE returned to you as well,
+    set return_type to True.  In this case, a (value, type) tuple will be
+    returned.  The second value in the tuple will be a python string
+    describing the ganglia metric type.
     """
 
     # first, find the canonical name for the host passed in
@@ -154,12 +159,15 @@ def get_metric_for_host(hostname, metricname):
         for metric in tree.findall('METRIC'):
             # found a metric we care about.
             if metric.attrib['NAME'] == metricname:
-                return metric.attrib['VAL']
+                if return_type:
+                    return (metric.attrib['VAL'], metric.attrib['TYPE'])
+                else:
+                    return metric.attrib['VAL']
+
     except expat.ExpatError:
         sys.stdout.write("XML parse error")
         done(2)
     f_hndl.close()
-
 
 
 def done (status):

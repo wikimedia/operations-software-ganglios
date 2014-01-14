@@ -127,10 +127,15 @@ def storeXMLData(srcHosts, dataDir):
 
     logger.info("Retrieving ganglia data from selected hosts...")
     for host in srcHosts:
+        port = 8649
+        if ':' in host
+            (host, port) = host.split(':')
+            port = int(port)
+
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(15.0)
-            s.connect((host, 8649))
+            s.connect((host, port))
             (fdTF,tmpFile) = tempfile.mkstemp()
             fdTmpFile = os.fdopen(fdTF, "w+b")
             while True:
