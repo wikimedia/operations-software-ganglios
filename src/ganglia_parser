@@ -128,7 +128,7 @@ def storeXMLData(srcHosts, dataDir):
     logger.info("Retrieving ganglia data from selected hosts...")
     for host in srcHosts:
         port = 8649
-        if ':' in host
+        if ':' in host:
             (host, port) = host.split(':')
             port = int(port)
 
