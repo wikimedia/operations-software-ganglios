@@ -1,3 +1,9 @@
+ganglios (1.3.1-1) precise-wikimedia; urgency=low
+
+  * Log level properly set to ERROR
+
+ -- Andrew Otto (WMF) <otto@wikimedia.org>  Mon, 20 Jan 2014 15:31:02 +0000
+
 ganglios (1.3.1) precise-wikimedia; urgency=low
 
   * Fixing syntax error in ganglios_parser
