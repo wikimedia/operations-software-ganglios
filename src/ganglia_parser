@@ -31,7 +31,7 @@ hdlr = logging.FileHandler('%s/ganglia_parser.log' % logDir)
 formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr) 
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 def unionMetrics( curMetrics, hostFilePath ):
     '''When a single host is present in more than one gmond collector node
